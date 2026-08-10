@@ -283,8 +283,7 @@
 const EVENT_CONFIG = {
   eventCode: "INORGANICUSERSFORUM2026",
   eventName: "Inorganic Users' Forum 2026",
-  eventSubtitle: "Introducing the Next Generation of ICP-OES",
-  eventSubtitle2: "The New PerkinElemer Avio® 3000",
+  eventSubtitle: "Introducing the Next Generation of ICP-OES - The New PerkinElemer Avio® 3000",
   eventDateDisplay: "29 September 2026",
   eventTimeDisplay: "9:00 AM to 5:00 PM",
   venue: "Olivares cor. Arellano Sts, Palanan, Makati City",
@@ -302,8 +301,7 @@ const EVENT_CONFIG = {
 
 document.getElementById("orgLabelInline").textContent = EVENT_CONFIG.orgName;
 document.getElementById("eventTitle").textContent = EVENT_CONFIG.eventName;
-document.getElementById("eventSubtitle").innerHTML =
-  EVENT_CONFIG.eventSubtitle + (EVENT_CONFIG.eventSubtitle2 ? "<br>" + EVENT_CONFIG.eventSubtitle2 : "");
+document.getElementById("eventSubtitle").textContent = EVENT_CONFIG.eventSubtitle;
 document.getElementById("eventAddress").textContent = EVENT_CONFIG.venue;
 document.getElementById("eventDateTime").innerHTML =
   EVENT_CONFIG.eventDateDisplay + ' <span class="sep">|</span> ' + EVENT_CONFIG.eventTimeDisplay;
