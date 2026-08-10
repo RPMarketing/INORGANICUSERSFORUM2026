@@ -64,15 +64,15 @@
   }
 .header .subtitle {
   color: #f5f7fb;
-  font-size: 17px;
+  font-size: clamp(10px, 3.2vw, 17px);
   font-weight: 700;
   font-style: italic;
   margin: 0 0 3px;
   line-height: 1.3;
-}
-  .header .subtitle .line2 {
-  font-size: 0.85em;
-  opacity: 0.9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
   .header .address-line { color: #f1f4fa; font-size: 15px; font-weight: 700; line-height: 1.3; margin: 0 0 3px; }
   .header .datetime-line { color: #f1f4fa; font-size: 15px; font-weight: 700; letter-spacing: .01em; margin: 0; line-height: 1.3; }
