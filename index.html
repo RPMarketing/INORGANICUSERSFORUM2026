@@ -70,6 +70,10 @@
   margin: 0 0 3px;
   line-height: 1.3;
 }
+  .header .subtitle .line2 {
+  font-size: 0.85em;
+  opacity: 0.9;
+}
   .header .address-line { color: #f1f4fa; font-size: 15px; font-weight: 700; line-height: 1.3; margin: 0 0 3px; }
   .header .datetime-line { color: #f1f4fa; font-size: 15px; font-weight: 700; letter-spacing: .01em; margin: 0; line-height: 1.3; }
   .header .datetime-line .sep { color: #f1f4fa; margin: 0 8px; font-weight: 500; }
@@ -279,7 +283,8 @@
 const EVENT_CONFIG = {
   eventCode: "INORGANICUSERSFORUM2026",
   eventName: "Inorganic Users' Forum 2026",
-  eventSubtitle: "Introducing the Next Generation of ICP-OES - The New PerkinElemer Avio® 3000",
+  eventSubtitle: "Introducing the Next Generation of ICP-OES",
+  eventSubtitle2: "The New PerkinElemer Avio® 3000",
   eventDateDisplay: "29 September 2026",
   eventTimeDisplay: "9:00 AM to 5:00 PM",
   venue: "Olivares cor. Arellano Sts, Palanan, Makati City",
@@ -297,7 +302,8 @@ const EVENT_CONFIG = {
 
 document.getElementById("orgLabelInline").textContent = EVENT_CONFIG.orgName;
 document.getElementById("eventTitle").textContent = EVENT_CONFIG.eventName;
-document.getElementById("eventSubtitle").textContent = EVENT_CONFIG.eventSubtitle;
+document.getElementById("eventSubtitle").innerHTML =
+  EVENT_CONFIG.eventSubtitle + (EVENT_CONFIG.eventSubtitle2 ? "<br>" + EVENT_CONFIG.eventSubtitle2 : "");
 document.getElementById("eventAddress").textContent = EVENT_CONFIG.venue;
 document.getElementById("eventDateTime").innerHTML =
   EVENT_CONFIG.eventDateDisplay + ' <span class="sep">|</span> ' + EVENT_CONFIG.eventTimeDisplay;
@@ -334,6 +340,8 @@ document.getElementById("category").addEventListener("change", function () {
   document.getElementById("categorySpecifyField").style.display = (this.value === "Others") ? "block" : "none";
 });
 
+document.getElementById("eventSubtitle").innerHTML =
+  EVENT_CONFIG.eventSubtitle + (EVENT_CONFIG.eventSubtitle2 ? '<br><span class="line2">' + EVENT_CONFIG.eventSubtitle2 + '</span>' : "");
 document.getElementById("professionCode").addEventListener("change", function () {
   document.getElementById("licenseField").style.display =
     (this.value === "Registered Chemist" || this.value === "Registered Chemical Technician") ? "block" : "none";
