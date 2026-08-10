@@ -62,18 +62,18 @@
     letter-spacing: .03em;
     font-weight: 800;
   }
-.header .subtitle {
-  color: #f5f7fb;
-  font-size: 17px;
-  font-weight: 700;
-  font-style: italic;
-  margin: 0 0 3px;
-  line-height: 1.3;
-}
+  .header .subtitle {
+    color: #f5f7fb;
+    font-size: 17px;
+    font-weight: 700;
+    font-style: italic;
+    margin: 0 0 3px;
+    line-height: 1.3;
+  }
   .header .subtitle .line2 {
-  font-size: 0.85em;
-  opacity: 0.9;
-}
+    font-size: 0.85em;
+    opacity: 0.9;
+  }
   .header .address-line { color: #f1f4fa; font-size: 15px; font-weight: 700; line-height: 1.3; margin: 0 0 3px; }
   .header .datetime-line { color: #f1f4fa; font-size: 15px; font-weight: 700; letter-spacing: .01em; margin: 0; line-height: 1.3; }
   .header .datetime-line .sep { color: #f1f4fa; margin: 0 8px; font-weight: 500; }
@@ -104,7 +104,7 @@
   .field { flex: 1 1 160px; }
   label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
   label .opt { font-weight: 400; color: var(--muted); }
-  input[type=text], input[type=email], input[type=tel], select, textarea {
+  input[type=text], input[type=email], input[type=tel], input[type=date], select, textarea {
     width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
     font-size: 16px; font-family: inherit; background: #fafbfc;
     transition: border-color .15s, box-shadow .15s;
@@ -190,6 +190,7 @@
         <div class="field"><label>First Name <span class="req">*</span></label><input type="text" name="firstName" required></div>
         <div class="field"><label>Middle Name <span class="opt">(optional)</span></label><input type="text" name="middleName"></div>
         <div class="field"><label>Last Name <span class="req">*</span></label><input type="text" name="lastName" required></div>
+        <div class="field" style="flex:0 0 120px;"><label>Suffix <span class="opt">(optional)</span></label><input type="text" name="suffix" placeholder="Jr., Sr., III"></div>
       </div>
 
       <div class="section-title">Professional Details</div>
@@ -214,6 +215,10 @@
           <label>License Number</label>
           <input type="text" name="licenseNumber">
         </div>
+        <div class="field" id="licenseExpirationField" style="display:none;">
+          <label>License Expiration</label>
+          <input type="date" name="licenseExpiration">
+        </div>
       </div>
       <div class="row">
         <div class="field">
@@ -221,7 +226,7 @@
           <select name="category" id="category" required>
             <option value="">Select...</option>
             <option>Academy</option><option>Agriculture and Feeds</option><option>Chemicals</option>
-            <option>Clinical</option>Consumer Productss</option><option>Cosmetics</option><option>Energy</option><option>Environmental</option>
+            <option>Clinical</option><option>Consumer Products</option><option>Cosmetics</option><option>Energy</option><option>Environmental</option>
             <option>Food and Beverage</option><option>Forensics</option><option>Government</option><option>Independent Testing</option>
             <option>Materials and Polymer</option><option>Mining</option><option>Nutraceuticals</option><option>Petrochemicals and Lubricants</option>
             <option>Pharmaceuticals</option><option>Regulatory</option><option>Semiconductor and Electronics</option><option>Others</option>
@@ -244,6 +249,14 @@
 
       <div class="section-title">Other</div>
       <div class="row">
+        <div class="field">
+          <label>Will you need parking? <span class="req">*</span></label>
+          <select name="parking" required>
+            <option value="">Select...</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
         <div class="field">
           <label>Food Restrictions <span class="opt">(optional)</span></label>
           <textarea name="foodRestrictions" placeholder="e.g. vegetarian, allergies, halal..."></textarea>
@@ -301,7 +314,7 @@ const EVENT_CONFIG = {
 document.getElementById("orgLabelInline").textContent = EVENT_CONFIG.orgName;
 document.getElementById("eventTitle").textContent = EVENT_CONFIG.eventName;
 document.getElementById("eventSubtitle").innerHTML =
-  EVENT_CONFIG.eventSubtitle + (EVENT_CONFIG.eventSubtitle2 ? "<br>" + EVENT_CONFIG.eventSubtitle2 : "");
+  EVENT_CONFIG.eventSubtitle + (EVENT_CONFIG.eventSubtitle2 ? '<br><span class="line2">' + EVENT_CONFIG.eventSubtitle2 + '</span>' : "");
 document.getElementById("eventAddress").textContent = EVENT_CONFIG.venue;
 document.getElementById("eventDateTime").innerHTML =
   EVENT_CONFIG.eventDateDisplay + ' <span class="sep">|</span> ' + EVENT_CONFIG.eventTimeDisplay;
@@ -338,11 +351,10 @@ document.getElementById("category").addEventListener("change", function () {
   document.getElementById("categorySpecifyField").style.display = (this.value === "Others") ? "block" : "none";
 });
 
-document.getElementById("eventSubtitle").innerHTML =
-  EVENT_CONFIG.eventSubtitle + (EVENT_CONFIG.eventSubtitle2 ? '<br><span class="line2">' + EVENT_CONFIG.eventSubtitle2 + '</span>' : "");
 document.getElementById("professionCode").addEventListener("change", function () {
-  document.getElementById("licenseField").style.display =
-    (this.value === "Registered Chemist" || this.value === "Registered Chemical Technician") ? "block" : "none";
+  const show = (this.value === "Registered Chemist" || this.value === "Registered Chemical Technician");
+  document.getElementById("licenseField").style.display = show ? "block" : "none";
+  document.getElementById("licenseExpirationField").style.display = show ? "block" : "none";
 });
 
 const form = document.getElementById("regForm");
