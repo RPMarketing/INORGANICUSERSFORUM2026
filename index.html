@@ -422,13 +422,18 @@ document.querySelectorAll('input[name="attendanceMode"]').forEach(radio => {
   radio.addEventListener("change", function () {
     const parkingWrap = document.getElementById("parkingFieldWrap");
     const parkingSelect = document.getElementById("parkingSelect");
+    const foodWrap = document.getElementById("foodRestrictionsFieldWrap");
+    const foodInput = document.getElementById("foodRestrictionsInput");
     if (this.value === "Online") {
       parkingWrap.style.display = "none";
       parkingSelect.required = false;
       parkingSelect.value = "No";
+      foodWrap.style.display = "none";
+      foodInput.value = "";
     } else {
       parkingWrap.style.display = "";
       parkingSelect.required = true;
+      foodWrap.style.display = "";
     }
   });
 });
