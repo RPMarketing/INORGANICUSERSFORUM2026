@@ -249,11 +249,30 @@
         <div class="field"><label>Institution Address <span class="req">*</span></label><input type="text" name="address" required></div>
         <div class="field" style="flex:0 0 140px;"><label>Zipcode <span class="req">*</span></label><input type="text" name="zipcode" required></div>
       </div>
+
+      <!-- Only shown for a Hybrid event (Events sheet EventFormat="Hybrid")
+           — a plain in-person event never shows this at all. Checked via a
+           quick fetch on page load; see initHybridCheck() below. -->
+      <div class="section-title" id="attendanceSectionTitle" style="display:none;">Attendance</div>
+      <div class="row" id="attendanceModeField" style="display:none;">
+        <div class="field" style="flex:1 1 100%;">
+          <label>How will you be attending? <span class="req">*</span></label>
+          <div style="display:flex; gap:20px; margin-top:6px;">
+            <label style="display:flex; align-items:center; gap:6px; font-weight:500; margin:0;">
+              <input type="radio" name="attendanceMode" value="Face-to-Face" style="width:auto;"> Face-to-Face
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; font-weight:500; margin:0;">
+              <input type="radio" name="attendanceMode" value="Online" style="width:auto;"> Online
+            </label>
+          </div>
+        </div>
+      </div>
+
       <div class="section-title">Other</div>
       <div class="row">
-        <div class="field">
+        <div class="field" id="parkingFieldWrap">
           <label>Will you need parking? <span class="req">*</span></label>
-          <select name="parking" required>
+          <select name="parking" id="parkingSelect" required>
             <option value="">Select...</option>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
@@ -374,6 +393,46 @@ document.getElementById("dataPrivacyReadMoreBtn").addEventListener("click", func
   const isOpen = fullText.classList.toggle("show");
   this.textContent = isOpen ? "Show less" : "Read more";
 });
+
+// Reveals the Face-to-Face/Online choice ONLY for a Hybrid event (Events
+// sheet EventFormat="Hybrid"). A plain in-person event never shows this at
+// all, and the field stays not-required — the backend defaults everyone
+// to Face-to-Face when the event isn't Hybrid, so nothing needs to be sent
+// either way in that case.
+(async function initHybridCheck() {
+  try {
+    const res = await fetch(`${EVENT_CONFIG.webAppUrl}?action=registrationBootstrap&code=${encodeURIComponent(EVENT_CONFIG.eventCode)}`);
+    const data = JSON.parse(await res.text());
+    if (data.ok && data.isHybrid) {
+      document.getElementById("attendanceSectionTitle").style.display = "";
+      document.getElementById("attendanceModeField").style.display = "flex";
+      document.querySelectorAll('input[name="attendanceMode"]').forEach(el => el.required = true);
+    }
+  } catch (err) {
+    console.error("[registration] hybrid check failed:", err);
+    // Fails silently — the form just behaves as a normal in-person-only
+    // registration if this check doesn't come back, rather than blocking
+    // anyone from registering over it.
+  }
+})();
+
+// Online attendees don't need the parking question — hide it and clear
+// its "required" the moment Online is picked, restore it for Face-to-Face.
+document.querySelectorAll('input[name="attendanceMode"]').forEach(radio => {
+  radio.addEventListener("change", function () {
+    const parkingWrap = document.getElementById("parkingFieldWrap");
+    const parkingSelect = document.getElementById("parkingSelect");
+    if (this.value === "Online") {
+      parkingWrap.style.display = "none";
+      parkingSelect.required = false;
+      parkingSelect.value = "No";
+    } else {
+      parkingWrap.style.display = "";
+      parkingSelect.required = true;
+    }
+  });
+});
+
 const form = document.getElementById("regForm");
 const msg = document.getElementById("formMsg");
 const submitBtn = document.getElementById("submitBtn");
