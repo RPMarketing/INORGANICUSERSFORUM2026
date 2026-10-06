@@ -193,7 +193,7 @@
           <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="m_email"></div>
         </div>
         <div class="row">
-          <div class="field"><label>Institution <span class="req">*</span></label><input type="text" id="m_institution"></div>
+          <div class="field"><label>Institution <span class="req">*</span></label><input type="text" id="m_institution" list="institutionList" autocomplete="off"><datalist id="institutionList"></datalist></div>
           <div class="field"><label>Category <span class="req">*</span></label><input type="text" id="m_category" placeholder="e.g. Chemist, Student, Faculty"></div>
         </div>
       </div>
@@ -349,6 +349,28 @@ function escapeHtml(str) {
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
+
+// Institution typeahead — suggests existing institutions as you type, but
+// never forces a selection. A new name is added to the shared list
+// automatically on submit, saved exactly as typed. Loaded separately from
+// the main form setup below, so a failure here never blocks the form.
+(async function loadInstitutionList() {
+  try {
+    const res = await fetch(EVENT_CONFIG.webAppUrl + "?action=institutionList");
+    const result = JSON.parse(await res.text());
+    if (!result.ok || !Array.isArray(result.institutions)) return;
+    const datalist = document.getElementById("institutionList");
+    datalist.innerHTML = "";
+    result.institutions.forEach(name => {
+      const opt = document.createElement("option");
+      opt.value = name;
+      datalist.appendChild(opt);
+    });
+  } catch (err) {
+    // Suggestions are a nice-to-have; the plain field still works if this fails.
+    console.warn("Could not load institution list:", err);
+  }
+})();
 
 async function init() {
   try {
